@@ -1,8 +1,12 @@
 #Import de pré-processamento
-from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, Normalizer, QuantileTransformer 
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, Normalizer, QuantileTransformer, KBinsDiscretizer 
 from sklearn.feature_selection import VarianceThreshold
+from sklearn.impute import SimpleImputer
 
+import pandas as pd
 from pandas import read_csv, get_dummies
+
+import numpy as np
 
 #Carregar o CSV
 def load_csv(filePath, missing_headers=False):
@@ -69,7 +73,27 @@ def quantile_transformer(data):
     
     return data
 
+#Imputação
+def imputation(data):
+    imp = SimpleImputer(missing_values=np.nan, strategy='mean')
+    data = imp.fit_transform(data)
+
+    return data
+
+#Discretização
+def discretization(data):
+    est = KBinsDiscretizer()
+    data = est.fit_transform(data)
+
+    return data
+
 dataset = load_csv('Iris.csv')
 #dataset = one_hot_encoder(dataset)
 #dataset = minmax(dataset)
+
+#dataset.drop(columns=['Species','Id'], inplace=True)
+#dataset = imputation(dataset)
+
+#dataset = discretization(dataset)
+
 print(dataset)
