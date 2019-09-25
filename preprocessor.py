@@ -4,7 +4,6 @@ from sklearn.feature_selection import VarianceThreshold
 
 from pandas import read_csv, get_dummies
 
-
 #Carregar o CSV
 def load_csv(filePath, missing_headers=False):
 
@@ -15,7 +14,6 @@ def load_csv(filePath, missing_headers=False):
 
     return data
 
-
 #Aplicar One-Hot-Encoder
 def one_hot_encoder(data):
 
@@ -23,26 +21,21 @@ def one_hot_encoder(data):
     
     return data
 
-
 #MinMax Scaler
 def minmax(data):
 
     scaler = MinMaxScaler()
-    scaler.fit(data)
-    data = scaler.transform(data)
+    data = scaler.fit_transform(data)
     
     return data
-
 
 #Standard Scaler
 def standard(data):
 
     scaler = StandardScaler()
-    scaler.fit(data)
-    data = scaler.transform(data)
+    data = scaler.fit_transform(data)
     
     return data
-
 
 #Variance Threshold
 def threshold(data):
@@ -52,9 +45,44 @@ def threshold(data):
     
     return data
 
-dataset = load_csv('/home/fernandozagatti/Downloads/Iris.csv')
-dataset = one_hot_encoder(dataset)
+#Robust Scaler
+def robust(data):
+
+    transformer = RobustScaler().fit(data)
+    data = transformer.transform(data)
+    
+    return data
+
+#Normalizer Scaler
+def normalizer(data):
+
+    transformer = Normalizer().fit(data)
+    data = transformer.transform(data)
+    
+    return data
+
+#Quantile Transformer
+def quantile_transformer(data):
+
+    transformer = QuantileTransformer()
+    data = transformer.fit_transform(data)
+    
+    return data
+
+#Remover outlier
+def remove_outliers(data):
+
+    real = [i for i in range(len(data.iloc[0])) if type(data.iloc[0, i]) != str]
+    mean = data.describe().iloc[1, :]
+    std = data.describe().iloc[2, :]
+
+    for (real, mean, std) in zip(real, mean, std):
+        data = data[data[real] < 3*std + mean]
+
+    return data
+
+dataset = load_csv('Iris.csv')
+dataset = remove_outliers(dataset)
+#dataset = one_hot_encoder(dataset)
 #dataset = minmax(dataset)
-#dataset = standard(dataset)
-dataset = threshold(dataset)
 print(dataset)
