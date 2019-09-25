@@ -7,12 +7,12 @@ class MarvinCleaner:
 
     PIPELINE_OPTIONS = {
         "imputation": imputation,
-        "onehotencoding": onehotencoding,
+        "one_hot_encoder": one_hot_encoder,
         "minmax": minmax,
         "normalizer": normalizer,
-        "quantiletransformer": quantiletransformer,
-        "robustscaler": robustscaler,
-        "standardscaler": standardscaler,
+        "quantile_transformer": quantile_transformer,
+        "robust_scaler": robust_scaler,
+        "standard_scaler": standard_scaler,
     }
 
     def load_csv(filePath, missing_headers=False):
@@ -31,4 +31,4 @@ class MarvinCleaner:
         for stage in pipeline:
             if stage in PIPELINE_OPTIONS:
                 print("Stage --> ", stage)
-                PIPELINE_OPTIONS[stage]()
+                self.dataframe = PIPELINE_OPTIONS[stage](self.dataframe)
