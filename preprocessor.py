@@ -69,20 +69,7 @@ def quantile_transformer(data):
     
     return data
 
-#Remover outlier
-def remove_outliers(data):
-
-    real = [i for i in range(len(data.iloc[0])) if type(data.iloc[0, i]) != str]
-    mean = data.describe().iloc[1, :]
-    std = data.describe().iloc[2, :]
-
-    for (real, mean, std) in zip(real, mean, std):
-        data = data[data[real] < 3*std + mean]
-
-    return data
-
 dataset = load_csv('Iris.csv')
-dataset = remove_outliers(dataset)
 #dataset = one_hot_encoder(dataset)
 #dataset = minmax(dataset)
 print(dataset)
