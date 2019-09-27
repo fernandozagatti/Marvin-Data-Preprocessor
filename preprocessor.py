@@ -3,6 +3,7 @@ from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, No
 from sklearn.feature_selection import VarianceThreshold
 from sklearn.impute import SimpleImputer
 
+import numpy as np
 import pandas as pd
 from pandas import read_csv, get_dummies
 
@@ -87,13 +88,24 @@ def discretization(data):
 
     return data
 
+#Removendo outlier
+def remove_outlier(df_in):
+    df_out = df_in
+    for col_name in df_out.columns:
+        q1 = df_out[col_name].quantile(0.25) #retorna o primeiro quartil
+        q3 = df_out[col_name].quantile(0.75) #retorna o terceiro quartil
+        iqr = q3-q1                          #calcula o iqr(interquartile range)
+        fence_low  = q1-1.5*iqr              #calcula o valor minimo para aplicar no filtro
+        fence_high = q3+1.5*iqr              #calcula o valor máximo para aplicar no filtro
+        df_out = df_out.loc[(df_out[col_name] > fence_low) & (df_out[col_name] < fence_high)]
+    return df_out 
+
+
 dataset = load_csv('Iris.csv')
 #dataset = one_hot_encoder(dataset)
 #dataset = minmax(dataset)
 
-#dataset.drop(columns=['Species','Id'], inplace=True)
-#dataset = imputation(dataset)
-
-#dataset = discretization(dataset)
+dataset.drop(columns=['Species','Id'], inplace=True)
+dataset = remove_outlier(dataset)
 
 print(dataset)

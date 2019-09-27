@@ -8,3 +8,5 @@ Data Preprocessor for Apache Marvin.
 ### Scales (MinMax, Normalizer, QuantileTransformer, RobustScaler, StandardScaler)
 
 ### VarianceThreshold
+
+### Remove outliers
