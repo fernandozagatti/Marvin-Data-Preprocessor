@@ -15,8 +15,6 @@ class MarvinCleaner(object):
     
     def __init__(self):
         dataframe = pd.DataFrame()
-        text_vector = None
-        text_vectorizer = None
         
     @classmethod
     def load_csv(cls, file_path, missing_headers=False):
@@ -67,7 +65,7 @@ class MarvinCleaner(object):
         for stage in pipeline:
             if stage in cls.PIPELINE_OPTIONS:
                 print("Stage --> ", stage)
-                cls.vector = cls.PIPELINE_OPTIONS[stage](cls.dataframe)
+                cls.dataframe = cls.PIPELINE_OPTIONS[stage](cls.dataframe)
 
     @classmethod
     def preprocess_text(cls, pipeline,column_text="text",lang='english'):
@@ -75,5 +73,3 @@ class MarvinCleaner(object):
             if stage in cls.PIPELINE_TEXT_OPTIONS:
                 print("Stage --> ", stage)
                 cls.dataframe[column_text] = cls.PIPELINE_TEXT_OPTIONS[stage](cls.dataframe[column_text],lang)
-
-    

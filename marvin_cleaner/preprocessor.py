@@ -15,14 +15,10 @@ from pandas import read_csv, get_dummies
 
 import numpy as np
 
-global data_columns
-
 #Apply One-Hot-Encoder
 def one_hot_encoder(data):
 
     data = get_dummies(data)
-    global data_columns
-    data_columns = list(data.columns) 
     return data
 
 ####### SCALERS ####### 
@@ -30,7 +26,7 @@ def one_hot_encoder(data):
 #Apply MinMax Scaler
 def minmax(data):
 
-    global data_columns
+    data_columns = list(data.columns)
     scaler = MinMaxScaler()
     data = scaler.fit_transform(data)
     data = pd.DataFrame(data, columns=data_columns)
@@ -39,7 +35,7 @@ def minmax(data):
 #Apply Standard Scaler
 def standard_scaler(data):
 
-    global data_columns
+    data_columns = list(data.columns)
     scaler = StandardScaler()
     data = scaler.fit_transform(data)
     data = pd.DataFrame(data, columns=data_columns)
@@ -48,7 +44,7 @@ def standard_scaler(data):
 #Apply Variance Threshold
 def variance_threshold(data): 
 
-    global data_columns
+    data_columns = list(data.columns)
     selector = VarianceThreshold()
     data = selector.fit_transform(data)
     data = pd.DataFrame(data, columns=data_columns)
@@ -57,7 +53,7 @@ def variance_threshold(data):
 #Apply Robust Scaler
 def robust_scaler(data):
 
-    global data_columns
+    data_columns = list(data.columns)
     transformer = RobustScaler().fit(data)
     data = transformer.transform(data)
     data = pd.DataFrame(data, columns=data_columns)
@@ -66,7 +62,7 @@ def robust_scaler(data):
 #Apply Normalizer Scaler
 def normalizer(data):
 
-    global data_columns
+    data_columns = list(data.columns)
     transformer = Normalizer().fit(data)
     data = transformer.transform(data)
     data = pd.DataFrame(data, columns=data_columns)
@@ -75,7 +71,7 @@ def normalizer(data):
 #Apply Quantile Transformer
 def quantile_transformer(data):
 
-    global data_columns
+    data_columns = list(data.columns)
     transformer = QuantileTransformer()
     data = transformer.fit_transform(data)
     data = pd.DataFrame(data, columns=data_columns)
@@ -86,7 +82,7 @@ def quantile_transformer(data):
 #Data imputation
 def imputation(data):
 
-    global data_columns
+    data_columns = list(data.columns)
     imp = SimpleImputer(missing_values=np.nan, strategy='mean')
     data = imp.fit_transform(data)
     data = pd.DataFrame(data, columns=data_columns)
@@ -94,13 +90,14 @@ def imputation(data):
 
 #Data discretization
 def discretization(data):
+
     est = KBinsDiscretizer()
     data = est.fit_transform(data)
-
     return data
 
-#Remove outliers of data
+#Remove outliers from data
 def remove_outlier(df_in):
+
     df_out = df_in
     for col_name in df_out.columns:
         q1 = df_out[col_name].quantile(0.25) #return fist quartile
@@ -119,6 +116,7 @@ def stop_words(text,lang):
 
 # Word Tokenize
 def tokenizer(text,lang):
+    nltk.download('punkt')
     return [nltk.word_tokenize(t) for t in text]
 
 # PorterStemmer
@@ -132,5 +130,3 @@ def lemmatizer(text,lang):
     nltk.download('wordnet')
     wnl = nltk.WordNetLemmatizer()
     return [[wnl.lemmatize(w) for w in t] for t in text]
-
-
