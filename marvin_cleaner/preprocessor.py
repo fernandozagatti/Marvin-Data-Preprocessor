@@ -1,6 +1,13 @@
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, Normalizer, QuantileTransformer, KBinsDiscretizer 
 from sklearn.feature_selection import VarianceThreshold
 from sklearn.impute import SimpleImputer
+from nltk.corpus import stopwords
+from nltk import download
+import nltk
+from nltk.stem.porter import PorterStemmer
+from nltk.stem import WordNetLemmatizer
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 import numpy as np
 import pandas as pd
@@ -103,3 +110,27 @@ def remove_outlier(df_in):
         fence_high = q3+1.5*iqr              #calculates the maximum value to apply to the filter
         df_out = df_out.loc[(df_out[col_name] > fence_low) & (df_out[col_name] < fence_high)]
     return df_out 
+
+# Remove stop words from stoplist
+def stop_words(text,lang):
+    download('stopwords')
+    stop_list = stopwords.words(lang)
+    return [[w for w in t if w not in stop_list] for t in text ]
+
+# Word Tokenize
+def tokenizer(text,lang):
+    return [nltk.word_tokenize(t) for t in text]
+
+# PorterStemmer
+def stemmer(text,lang):
+    nltk.download('punkt')
+    porter = nltk.PorterStemmer()
+    return [[porter.stem(w) for w in t] for t in text]
+
+# Lemmatization
+def lemmatizer(text,lang):
+    nltk.download('wordnet')
+    wnl = nltk.WordNetLemmatizer()
+    return [[wnl.lemmatize(w) for w in t] for t in text]
+
+
